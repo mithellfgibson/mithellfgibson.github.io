@@ -1,12 +1,10 @@
-/* custom.css — overrides for Just the Docs layout */
-
 @media screen and (min-width: 66.5rem) {
   .side-bar {
-    width: 300px;
+    width: 360px;
   }
 
   .main {
-    margin-left: 300px;
-    max-width: calc(100% - 300px);
+    margin-left: 360px;
+    max-width: calc(100% - 360px);
   }
 }
