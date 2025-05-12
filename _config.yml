@@ -132,6 +132,16 @@ nav_external_links:
 # Show navigation error report
 nav_error_report: true # default is false/nil.
 
+nav:
+  - title: "To-Do"
+    children:
+      - title: "List"
+        url: "/todo"
+
+  - title: "Calendar"
+    children:
+      - title: "View"
+        url: "/calendar"
 liquid:
   error_mode: strict
   strict_filters: true
