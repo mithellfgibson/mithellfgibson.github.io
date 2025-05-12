@@ -203,7 +203,7 @@ compress_html:
   profile: false
   # ignore:
   #   envs: all
- 
-  just_the_docs:
-  custom_css:
-    - assets/css/custom.css
+just_the_docs:
+    custom_css:
+      - assets/css/custom.css
+  
