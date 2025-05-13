@@ -2,9 +2,10 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Only keep these three sidebar items
+    // labels we want to keep
     const keep = ["Balanced", "List", "View"];
-    document.querySelectorAll(".nav-list-item").forEach(function(li) {
+
+    document.querySelectorAll(".nav-list-item").forEach(li => {
       const a = li.querySelector(".nav-list-link");
       if (!a || !keep.includes(a.textContent.trim())) {
         li.remove();
