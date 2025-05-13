@@ -8,6 +8,14 @@ url: "https://mithellfgibson.github.io"
 # Use Just the Docs as a remote theme
 remote_theme: just-the-docs/just-the-docs
 
+# Plugins: include remote-theme support for GitHub Pages
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-github-metadata
+  - jekyll-include-cache
+  - jekyll-sitemap
+
 # Manual sidebar: only three items
 nav:
   - title: "Balanced"
@@ -39,32 +47,23 @@ defaults:
     values:
       layout: "default"
 
-# Exclude all non-relevant files and folders
+# Exclude every default theme demo folder
 exclude:
-  - .sass-cache/
-  - .jekyll-cache/
-  - node_modules/
-  - Gemfile
-  - Gemfile.lock
-  - package.json
-  - package-lock.json
-  - README.md
-  - CHANGELOG.md
-  - MIGRATION.md
-  - CODE_OF_CONDUCT.md
-  - fixtures/
   - docs/
   - components/
   - utilities/
   - navigation/
   - layout/
   - assets/js/
-  - assets/css/just-the-docs*.css
+  - CHANGELOG.md
+  - MIGRATION.md
+  - CODE_OF_CONDUCT.md
+  - README.md
 
-# Configure search (optional)
+# Disable built-in site search (optional)
 search_enabled: false
 
-# Optional: disable default GitHub attribution
+# Remove default GitHub attribution
 aux_links: {}
 
 # Footer & misc features
