@@ -207,6 +207,10 @@ kramdown:
     block:
       line_numbers: false
 
+just_the_docs:
+  custom_css:
+    - assets/css/custom.css
+
 compress_html:
   clippings: all
   comments: all
@@ -216,7 +220,5 @@ compress_html:
   profile: false
   # ignore:
   #   envs: all
-just_the_docs:
-  custom_css:
-    - assets/css/custom.css
+
   
