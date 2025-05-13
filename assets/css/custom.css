@@ -1,10 +1,23 @@
+/* Make the sidebar wider (if you still want that) */
 @media screen and (min-width: 66.5rem) {
   .side-bar {
-    width: 360px;
+    width: 320px;
+    padding-left: 10px; /* reduce left padding inside sidebar */
   }
 
   .main {
-    margin-left: 360px;
-    max-width: calc(100% - 360px);
+    margin-left: 320px;
+    max-width: calc(100% - 320px);
   }
+}
+
+/* Reduce default page horizontal padding */
+.page {
+  padding-left: 1rem;  /* default is 2rem or more */
+  padding-right: 1rem;
+}
+
+/* Optional: shrink inner content margins for nav elements */
+.nav-list-item {
+  margin-left: 0.5rem; /* tighter spacing for dropdown items */
 }
