@@ -1,9 +1,11 @@
+/* assets/css/custom.css */
+
 /* Widen the sidebar slightly and push it closer to the left */
 @media screen and (min-width: 66.5rem) {
   .side-bar {
     width: 300px !important;
-    padding-left: 5px !important; /* reduce internal spacing */
-    margin-left: 0 !important;    /* reduce distance from screen edge */
+    padding-left: 5px !important;
+    margin-left: 0 !important;
   }
 
   .main {
@@ -20,7 +22,22 @@
   padding-right: 1rem !important;
 }
 
-/* Optional: reduce indentation of nav list items */
+/* Reduce indentation of nav list items */
 .nav-list-item {
   margin-left: 0.25rem !important;
 }
+
+/* Hide unwanted default sidebar entries */
+.nav-list-link[href^="/configuration"] { display: none !important; }
+.nav-list-link[href^="/ui-components"]   { display: none !important; }
+.nav-list-link[href^="/utilities"]      { display: none !important; }
+.nav-list-link[href^="/layout"]         { display: none !important; }
+.nav-list-link[href^="/navigation"]     { display: none !important; }
+.nav-list-link[href^="/customization"]  { display: none !important; }
+.nav-list-link[href^="/search"]         { display: none !important; }
+.nav-list-link[href^="/kitchen-sink"]   { display: none !important; }
+.nav-list-link[href^="/changelog"]      { display: none !important; }
+.nav-list-link[href^="/migration"]      { display: none !important; }
+
+/* Hide GitHub attribution aux-link */
+.aux-links { display: none !important; }
