@@ -133,6 +133,9 @@ nav_external_links:
 nav_error_report: true # default is false/nil.
 
 nav:
+  - title: "Balanced"
+    url: "/"
+
   - title: "To-Do"
     children:
       - title: "List"
@@ -214,6 +217,6 @@ compress_html:
   # ignore:
   #   envs: all
 just_the_docs:
-    custom_css:
+  custom_css:
       - assets/css/custom.css
   
