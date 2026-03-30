@@ -44,13 +44,16 @@
 /* Typography */
 @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap');
 
+* {
+  font-family: 'Merriweather', serif !important;
+}
+
 h1, h2, h3, h4, h5, h6,
 .site-title,
 .nav-list-link,
-.section-title {
+.section-title,
+.stat-card .label,
+.todo-section h2 {
   font-family: 'Syncopate', sans-serif !important;
 }
-
-body, p, td, th, li, label, input, button, .update-note {
-  font-family: 'Merriweather', serif !important;
 }
