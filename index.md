@@ -9,4 +9,4 @@ permalink: /
 
 # Balanced
 
-There is no end, there is no beginning: Perpetual Orientation.
+There is no end, there is no beginning: Perpetual Orientation
