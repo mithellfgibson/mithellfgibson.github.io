@@ -22,5 +22,11 @@ document.addEventListener("DOMContentLoaded", function() {
       </li>
     </ul>
   `;
+
+  // Force fonts
+  document.body.style.fontFamily = "'Merriweather', serif";
+  document.querySelectorAll('h1,h2,h3,h4,h5,h6,.site-title,.nav-list-link').forEach(el => {
+    el.style.fontFamily = "'Syncopate', sans-serif";
+  });
 });
 </script>
