@@ -1,5 +1,4 @@
 /* assets/css/custom.css */
-
 /* Widen the sidebar slightly and push it closer to the left */
 @media screen and (min-width: 66.5rem) {
   .side-bar {
@@ -7,7 +6,6 @@
     padding-left: 5px !important;
     margin-left: 0 !important;
   }
-
   .main {
     margin-left: 300px !important;
     max-width: calc(100% - 300px) !important;
@@ -41,8 +39,8 @@
 
 /* Hide GitHub attribution aux-link */
 .aux-links { display: none !important; }
-/* Typography */
 
+/* Typography */
 * {
   font-family: 'Merriweather', serif !important;
 }
@@ -54,5 +52,4 @@ h1, h2, h3, h4, h5, h6,
 .stat-card .label,
 .todo-section h2 {
   font-family: 'Syncopate', sans-serif !important;
-}
 }
