@@ -1,12 +1,11 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
 <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
-
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  // 1) Find the sidebar <nav> container
   const sidebarNav = document.querySelector('.side-bar nav');
   if (!sidebarNav) return;
-
-  // 2) Build your manual menu HTML
   sidebarNav.innerHTML = `
     <ul class="nav-list">
       <li class="nav-list-item">
