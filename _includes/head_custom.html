@@ -2,6 +2,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
 <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
+<style>
+  body, p, td, th, li, label, input, button, span, div {
+    font-family: 'Merriweather', serif !important;
+  }
+  h1, h2, h3, h4, h5, h6, .site-title, .nav-list-link {
+    font-family: 'Syncopate', sans-serif !important;
+  }
+</style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const sidebarNav = document.querySelector('.side-bar nav');
@@ -22,11 +30,5 @@ document.addEventListener("DOMContentLoaded", function() {
       </li>
     </ul>
   `;
-
-  // Force fonts
-  document.body.style.fontFamily = "'Merriweather', serif";
-  document.querySelectorAll('h1,h2,h3,h4,h5,h6,.site-title,.nav-list-link').forEach(el => {
-    el.style.fontFamily = "'Syncopate', sans-serif";
-  });
 });
 </script>
