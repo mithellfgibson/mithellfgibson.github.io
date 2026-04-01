@@ -21,9 +21,11 @@ layout: default
   .view-toggle button.active { background: #1a3a1a; color: white; }
   .done-date { font-size: 11px; color: #aaa; margin-left: 8px; }
   #done-view { display: none; }
-  .done-item { padding: 10px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+  .done-item { padding: 10px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
   .done-item .restore { background: none; border: none; color: #aaa; cursor: pointer; font-size: 12px; }
   .done-item .restore:hover { color: #1a3a1a; }
+  .done-item .del-done { background: none; border: none; color: #ddd; cursor: pointer; font-size: 12px; }
+  .done-item .del-done:hover { color: #c0392b; }
   .empty-note { color: #bbb; font-size: 14px; padding: 16px 0; }
 </style>
 
@@ -92,7 +94,7 @@ function render(cat) {
     list.innerHTML = '<div class="empty-note">No tasks.</div>';
     return;
   }
-  active.forEach((task, i) => {
+  active.forEach((task) => {
     const realIndex = tasks.indexOf(task);
     const div = document.createElement('div');
     div.className = 'todo-item';
@@ -123,55 +125,14 @@ function renderDone() {
     div.className = 'done-item';
     div.innerHTML = `
       <span>${task.text} <span class="done-date">${task.cat} · ${date}</span></span>
-      <button class="restore" onclick="restore('${task.cat}', '${task.text}')">restore</button>
+      <span>
+        <button class="restore" onclick="restore('${task.cat}', '${task.text}')">restore</button>
+        <button class="del-done" onclick="deleteDone('${task.cat}', '${task.text}')">delete</button>
+      </span>
     `;
     doneList.appendChild(div);
   });
 }
 
 function addTask(cat) {
-  const input = document.getElementById(cat + '-input');
-  const text = input.value.trim();
-  if (!text) return;
-  const tasks = load('todo-' + cat);
-  tasks.push({ text, done: false, doneAt: null });
-  save('todo-' + cat, tasks);
-  input.value = '';
-  render(cat);
-}
-
-function complete(cat, i) {
-  const tasks = load('todo-' + cat);
-  tasks[i].done = true;
-  tasks[i].doneAt = new Date().toISOString();
-  save('todo-' + cat, tasks);
-  render(cat);
-}
-
-function remove(cat, i) {
-  const tasks = load('todo-' + cat);
-  tasks.splice(i, 1);
-  save('todo-' + cat, tasks);
-  render(cat);
-}
-
-function restore(cat, text) {
-  const tasks = load('todo-' + cat);
-  const i = tasks.findIndex(t => t.text === text && t.done);
-  if (i !== -1) {
-    tasks[i].done = false;
-    tasks[i].doneAt = null;
-    save('todo-' + cat, tasks);
-  }
-  renderDone();
-  render(cat);
-}
-
-CATEGORIES.forEach(cat => {
-  document.getElementById(cat + '-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') addTask(cat);
-  });
-});
-
-CATEGORIES.forEach(render);
-</script>
+  const input = document.getElementById(cat + '-in
