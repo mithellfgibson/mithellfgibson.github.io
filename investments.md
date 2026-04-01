@@ -69,7 +69,7 @@ re.classList.add(tr>=0?'green':'red');
 const tb=document.getElementById('positions-body');
 rows.slice(7,12).forEach(r=>{
 if(!r[2])return;
-const pp=parseFloat(r[1]),nd=parseFloat(r[9])*100,pl=parseFloat(r[10]);
+const pp=parseFloat(r[1]),nd=parseFloat(r[9]),pl=parseFloat(r[10]);
 tb.innerHTML+=`<tr><td class="ticker">${r[2]}</td><td>${r[3]}</td><td>$${parseFloat(r[4]).toFixed(2)}</td><td>$${parseFloat(r[5]).toFixed(2)}</td><td>${r[7]}</td><td><span class="pill ${nd>=0?'green':'red'}">${nd>=0?'+':'-'}${Math.abs(nd).toFixed(2)}%</span></td><td style="font-weight:bold;color:${pl>=0?'#27ae60':'#c0392b'}">${pl>=0?'+':''}$${pl.toLocaleString()}</td><td><div class="bar-wrap"><div class="bar-fill" style="width:${Math.min(pp,100)}%"></div></div> ${pp}%</td></tr>`;
 });
 const lb=document.getElementById('lots-body');
