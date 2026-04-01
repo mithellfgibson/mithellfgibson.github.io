@@ -65,6 +65,7 @@ layout: default
 
 </div>
 
+{% raw %}
 <script>
 const CATEGORIES = ['school', 'personal'];
 
@@ -135,4 +136,57 @@ function renderDone() {
 }
 
 function addTask(cat) {
-  const input = document.getElementById(cat + '-in
+  const input = document.getElementById(cat + '-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const tasks = load('todo-' + cat);
+  tasks.push({ text, done: false, doneAt: null });
+  save('todo-' + cat, tasks);
+  input.value = '';
+  render(cat);
+}
+
+function complete(cat, i) {
+  const tasks = load('todo-' + cat);
+  tasks[i].done = true;
+  tasks[i].doneAt = new Date().toISOString();
+  save('todo-' + cat, tasks);
+  render(cat);
+}
+
+function remove(cat, i) {
+  const tasks = load('todo-' + cat);
+  tasks.splice(i, 1);
+  save('todo-' + cat, tasks);
+  render(cat);
+}
+
+function restore(cat, text) {
+  const tasks = load('todo-' + cat);
+  const i = tasks.findIndex(t => t.text === text && t.done);
+  if (i !== -1) {
+    tasks[i].done = false;
+    tasks[i].doneAt = null;
+    save('todo-' + cat, tasks);
+  }
+  renderDone();
+  render(cat);
+}
+
+function deleteDone(cat, text) {
+  const tasks = load('todo-' + cat);
+  const i = tasks.findIndex(t => t.text === text && t.done);
+  if (i !== -1) tasks.splice(i, 1);
+  save('todo-' + cat, tasks);
+  renderDone();
+}
+
+CATEGORIES.forEach(cat => {
+  document.getElementById(cat + '-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addTask(cat);
+  });
+});
+
+CATEGORIES.forEach(render);
+</script>
+{% endraw %}
