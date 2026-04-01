@@ -130,3 +130,12 @@ a:hover {
 .main-content label {
   color: #1a3a1a !important;
 }
+/* Force Syncopate on page titles */
+.main-content h1,
+.main-content h2,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6 {
+  font-family: 'Syncopate', sans-serif !important;
+}
