@@ -139,3 +139,6 @@ a:hover {
 .main-content h6 {
   font-family: 'Syncopate', sans-serif !important;
 }
+.main-content p {
+  color: #1a3a1a !important;
+}
