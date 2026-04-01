@@ -3,12 +3,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
 <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
 <style>
-  body, p, td, th, li, label, input, button, span, div {
-    font-family: 'Merriweather', serif !important;
+  :root {
+    --color-link: #b8860b !important;
+    --nav-child-link-color: #1a3a1a !important;
+    --body-text-color: #1a3a1a !important;
+    --sidebar-color: #f5f0e8 !important;
+    --base-button-color: #1a3a1a !important;
   }
-  h1, h2, h3, h4, h5, h6, .site-title, .nav-list-link {
-    font-family: 'Syncopate', sans-serif !important;
-  }
+  .side-bar { background-color: #f5f0e8 !important; border-right: 2px solid #b8860b !important; }
+  .site-title { color: #1a3a1a !important; }
+  .nav-list-link { color: #1a3a1a !important; }
+  .nav-list-link:hover { color: #b8860b !important; }
+  a { color: #b8860b !important; }
+  body { color: #1a3a1a !important; }
 </style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
