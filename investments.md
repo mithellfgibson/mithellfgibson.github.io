@@ -3,6 +3,17 @@ title: Investments
 layout: default
 ---
 
+<div id="inv-gate" style="text-align:center; margin-top: 80px;">
+  <label for="inv-pin" style="display:block; margin-bottom:12px; font-size:1rem;">Enter code to view investments</label>
+  <input id="inv-pin" type="password" maxlength="2" inputmode="numeric" pattern="[0-9]*"
+    style="font-size:2rem; width:70px; text-align:center; letter-spacing:8px; border:1px solid #b8860b; border-radius:4px; padding:6px; background:#f5f0e8; color:#1a3a1a; outline:none;"
+    autofocus />
+  <p id="inv-error" style="color:#c0392b; font-size:0.85rem; margin-top:8px; min-height:1.2em;"></p>
+</div>
+
+<div id="inv-content" style="display:none;">
+
+
 <style>
   .port-wrap { font-family: 'Georgia', serif; max-width: 860px; margin: 0 auto; }
   .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
@@ -79,4 +90,37 @@ lb.innerHTML+=`<tr><td>${r[1]}</td><td>${r[2]}</td><td>$${parseFloat(r[4]).toFix
 });
 document.getElementById('update-note').textContent='Last updated: '+new Date().toLocaleString();
 }).catch(e=>document.getElementById('update-note').textContent='Error: '+e.message);
+</script>
+</div>
+
+<script>
+(function() {
+  var CODE = "27";
+  var input = document.getElementById('inv-pin');
+  var gate = document.getElementById('inv-gate');
+  var content = document.getElementById('inv-content');
+  var error = document.getElementById('inv-error');
+
+  if (sessionStorage.getItem('inv_unlocked') === '1') {
+    gate.style.display = 'none';
+    content.style.display = 'block';
+    return;
+  }
+
+  input.addEventListener('input', function() {
+    if (input.value.length === 2) {
+      if (input.value === CODE) {
+        sessionStorage.setItem('inv_unlocked', '1');
+        gate.style.display = 'none';
+        content.style.display = 'block';
+      } else {
+        error.textContent = 'Incorrect code';
+        input.value = '';
+        input.focus();
+      }
+    } else {
+      error.textContent = '';
+    }
+  });
+})();
 </script>
