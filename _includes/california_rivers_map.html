@@ -4,7 +4,7 @@
 <style>
   #ca-rivers-map {
     width: 100%;
-    height: 520px;
+    height: 540px;
     border: 2px solid #b8860b;
     border-radius: 4px;
     margin-top: 32px;
@@ -19,18 +19,13 @@
   }
   .river-btn {
     background: none;
-    border: 1px solid #b8860b;
-    color: #b8860b !important;
+    border: 1px solid;
     padding: 5px 14px;
     border-radius: 20px;
     cursor: pointer;
     font-family: inherit;
     font-size: 0.85rem;
     transition: background 0.2s, color 0.2s;
-  }
-  .river-btn:hover, .river-btn.active {
-    background: #b8860b;
-    color: #f5f0e8 !important;
   }
   #river-map-label {
     font-size: 0.78rem;
@@ -39,132 +34,289 @@
     margin-top: 4px;
     margin-bottom: 8px;
   }
+  .river-popup h4 { margin: 0 0 6px; font-size: 0.95rem; }
+  .river-popup .cap-bar { background: #ddd; border-radius: 4px; height: 8px; width: 100%; margin: 6px 0; }
+  .river-popup .cap-fill { height: 8px; border-radius: 4px; }
+  .river-popup .cap-label { font-size: 0.82rem; color: #555; }
 </style>
 
 <div id="ca-rivers-map"></div>
-<p id="river-map-label">Click a river to explore</p>
+<p id="river-map-label">Click a river to explore — shows current reservoir capacity</p>
 <div id="river-list"></div>
 
 <script>
 (function() {
-  var rivers = [
-    {
-      name: "Sacramento River",
-      color: "#2a6496",
-      coords: [[41.74,-122.37],[41.20,-122.10],[40.50,-122.30],[39.90,-122.05],[39.30,-121.90],[38.80,-121.75],[38.35,-121.60],[38.05,-121.88]]
-    },
-    {
-      name: "San Joaquin River",
-      color: "#1a7a4a",
-      coords: [[37.00,-119.00],[37.20,-119.50],[37.45,-120.20],[37.75,-121.00],[38.05,-121.50],[38.05,-121.88]]
-    },
-    {
-      name: "Klamath River",
-      color: "#6b3fa0",
-      coords: [[42.18,-121.78],[41.90,-122.60],[41.50,-122.95],[41.30,-123.45],[41.55,-123.85],[41.53,-124.06]]
-    },
-    {
-      name: "Trinity River",
-      color: "#c0392b",
-      coords: [[40.95,-122.75],[40.80,-123.10],[40.60,-123.40],[41.05,-123.60],[41.30,-123.45]]
-    },
-    {
-      name: "Feather River",
-      color: "#e67e22",
-      coords: [[40.10,-120.50],[39.80,-121.20],[39.40,-121.55],[39.00,-121.60],[38.70,-121.60]]
-    },
-    {
-      name: "American River",
-      color: "#16a085",
-      coords: [[38.90,-120.10],[38.75,-120.70],[38.65,-121.10],[38.58,-121.50]]
-    },
-    {
-      name: "Merced River",
-      color: "#8e44ad",
-      coords: [[37.73,-119.57],[37.55,-119.90],[37.40,-120.35],[37.38,-120.98]]
-    },
-    {
-      name: "Kings River",
-      color: "#d35400",
-      coords: [[36.88,-118.58],[36.75,-119.10],[36.55,-119.50],[36.40,-119.82]]
-    },
-    {
-      name: "Kern River",
-      color: "#27ae60",
-      coords: [[36.48,-118.32],[36.15,-118.65],[35.80,-118.85],[35.40,-119.02]]
-    },
-    {
-      name: "Eel River",
-      color: "#2980b9",
-      coords: [[39.80,-123.02],[40.10,-123.35],[40.35,-123.65],[40.55,-124.30]]
-    },
-    {
-      name: "Russian River",
-      color: "#c0392b",
-      coords: [[39.38,-123.03],[39.00,-123.00],[38.65,-122.90],[38.45,-123.13]]
-    },
-    {
-      name: "Salinas River",
-      color: "#7f8c8d",
-      coords: [[35.48,-120.68],[35.80,-120.95],[36.20,-121.10],[36.45,-121.60],[36.72,-121.78]]
-    },
-    {
-      name: "Colorado River",
-      color: "#e74c3c",
-      coords: [[36.90,-114.10],[36.00,-114.50],[35.20,-114.62],[34.50,-114.38],[33.70,-114.52],[32.72,-114.72]]
-    },
-    {
-      name: "Santa Ana River",
-      color: "#f39c12",
-      coords: [[34.12,-116.88],[34.05,-117.30],[33.90,-117.60],[33.72,-117.93]]
+
+// California boundary in GeoJSON [lng, lat] order, clockwise (interior/hole ring)
+var CAL = [
+  [-124.21,41.99],[-123.00,41.99],[-121.50,41.99],[-120.00,41.99],
+  [-120.00,40.50],[-120.00,40.00],[-120.00,39.30],[-119.90,38.85],
+  [-119.50,38.50],[-118.50,38.00],[-117.80,37.50],[-117.10,37.00],
+  [-116.50,36.50],[-115.85,36.00],[-114.92,35.50],[-114.63,35.10],
+  [-114.13,34.90],[-114.43,34.75],[-114.15,34.30],[-114.50,33.90],
+  [-114.50,33.60],[-114.68,33.00],[-114.72,32.72],
+  [-117.13,32.53],[-117.24,32.70],[-117.35,33.00],[-117.38,33.20],
+  [-117.60,33.40],[-118.20,33.70],[-118.50,33.90],[-118.60,34.05],
+  [-119.20,34.10],[-119.70,34.40],[-120.00,34.50],[-120.40,34.60],
+  [-120.85,34.90],[-120.90,35.20],[-121.10,35.60],[-121.50,35.90],
+  [-121.80,36.20],[-121.90,36.50],[-122.15,37.00],[-122.40,37.30],
+  [-122.50,37.50],[-122.50,37.70],[-122.70,37.90],[-122.90,38.10],
+  [-123.00,38.30],[-123.10,38.50],[-123.45,38.70],[-123.70,38.90],
+  [-123.75,39.00],[-123.75,39.20],[-123.80,39.40],[-123.75,39.80],
+  [-124.20,40.00],[-124.40,40.40],[-124.25,40.70],[-124.15,41.10],
+  [-124.05,41.40],[-124.20,41.70],[-124.21,41.99]
+];
+
+var rivers = [
+  {
+    name: "Sacramento River", color: "#1a5276",
+    station: "SHA", reservoir: "Shasta Lake", capacity: 4552000,
+    coords: [
+      [41.74,-122.37],[41.50,-122.35],[41.20,-122.18],[40.93,-122.28],
+      [40.60,-122.38],[40.35,-122.30],[40.18,-122.24],[39.83,-122.00],
+      [39.51,-121.93],[39.26,-121.83],[39.00,-121.70],[38.76,-121.63],
+      [38.58,-121.50],[38.40,-121.60],[38.20,-121.73],[38.05,-121.88]
+    ]
+  },
+  {
+    name: "Feather River", color: "#117a65",
+    station: "ORO", reservoir: "Lake Oroville", capacity: 3537577,
+    coords: [
+      [40.15,-120.52],[39.85,-121.05],[39.67,-121.32],
+      [39.53,-121.56],[39.40,-121.60],[39.25,-121.62],[39.00,-121.70]
+    ]
+  },
+  {
+    name: "American River", color: "#1a8a5a",
+    station: "FOL", reservoir: "Folsom Lake", capacity: 977000,
+    coords: [
+      [38.92,-120.10],[38.90,-120.50],[38.80,-120.80],
+      [38.72,-121.00],[38.68,-121.20],[38.62,-121.35],[38.58,-121.50]
+    ]
+  },
+  {
+    name: "San Joaquin River", color: "#784212",
+    station: "MIL", reservoir: "Millerton Lake", capacity: 520500,
+    coords: [
+      [37.62,-119.07],[37.35,-119.40],[36.98,-119.55],[36.85,-119.80],
+      [36.95,-120.20],[37.20,-120.60],[37.50,-120.90],[37.75,-121.00],
+      [37.90,-121.25],[38.05,-121.55],[38.05,-121.88]
+    ]
+  },
+  {
+    name: "Klamath River", color: "#6c3483",
+    station: null, reservoir: null, capacity: null,
+    coords: [
+      [42.05,-121.78],[41.98,-122.20],[41.85,-122.70],[41.80,-123.00],
+      [41.75,-123.40],[41.60,-123.60],[41.53,-124.06]
+    ]
+  },
+  {
+    name: "Trinity River", color: "#922b21",
+    station: "CLE", reservoir: "Trinity Lake", capacity: 2447650,
+    coords: [
+      [41.05,-122.75],[40.90,-122.78],[40.80,-123.00],
+      [40.70,-123.20],[40.85,-123.45],[41.00,-123.60],[41.20,-123.72]
+    ]
+  },
+  {
+    name: "Eel River", color: "#2874a6",
+    station: null, reservoir: null, capacity: null,
+    coords: [
+      [39.78,-123.02],[40.10,-123.35],[40.25,-123.55],
+      [40.40,-123.75],[40.52,-124.08],[40.57,-124.31]
+    ]
+  },
+  {
+    name: "Russian River", color: "#c0392b",
+    station: "MEN", reservoir: "Lake Mendocino", capacity: 122500,
+    coords: [
+      [39.38,-123.03],[39.10,-123.10],[38.85,-123.00],
+      [38.70,-122.98],[38.55,-122.93],[38.48,-122.98],[38.43,-123.12]
+    ]
+  },
+  {
+    name: "Merced River", color: "#7d3c98",
+    station: "EXC", reservoir: "Lake McClure", capacity: 1024600,
+    coords: [
+      [37.74,-119.57],[37.65,-119.75],[37.53,-120.00],
+      [37.40,-120.30],[37.35,-120.50],[37.38,-120.98]
+    ]
+  },
+  {
+    name: "Kings River", color: "#d35400",
+    station: "PNF", reservoir: "Pine Flat Lake", capacity: 1000000,
+    coords: [
+      [36.88,-118.58],[36.82,-118.90],[36.78,-119.32],
+      [36.65,-119.55],[36.50,-119.75],[36.40,-119.82]
+    ]
+  },
+  {
+    name: "Kern River", color: "#1e8449",
+    station: "ISB", reservoir: "Lake Isabella", capacity: 568000,
+    coords: [
+      [36.48,-118.32],[36.35,-118.43],[36.20,-118.60],
+      [35.80,-118.80],[35.60,-118.90],[35.40,-119.02]
+    ]
+  },
+  {
+    name: "Salinas River", color: "#717d7e",
+    station: "NAC", reservoir: "Lake Nacimiento", capacity: 377900,
+    coords: [
+      [35.39,-120.58],[35.63,-120.69],[35.90,-120.90],
+      [36.22,-121.10],[36.50,-121.30],[36.67,-121.65],[36.80,-121.79]
+    ]
+  },
+  {
+    name: "Colorado River", color: "#e74c3c",
+    station: null, reservoir: null, capacity: null,
+    coords: [
+      [35.18,-114.57],[34.84,-114.60],[34.48,-114.35],
+      [34.16,-114.26],[33.70,-114.52],[33.42,-114.52],
+      [33.04,-114.68],[32.72,-114.72]
+    ]
+  },
+  {
+    name: "Santa Ana River", color: "#d4ac0d",
+    station: "PDM", reservoir: "Prado Dam", capacity: 250000,
+    coords: [
+      [34.24,-116.85],[34.15,-117.00],[34.05,-117.30],
+      [33.95,-117.48],[33.88,-117.70],[33.82,-117.93],[33.72,-117.96]
+    ]
+  }
+];
+
+// Map
+var map = L.map('ca-rivers-map').setView([37.5,-119.5], 6);
+
+L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+  maxZoom: 17,
+  attribution: '© <a href="https://opentopomap.org">OpenTopoMap</a>'
+}).addTo(map);
+
+// Inverted California mask — dims surrounding states
+L.geoJSON({
+  type: 'Feature',
+  geometry: {
+    type: 'Polygon',
+    coordinates: [
+      [[-180,-90],[-180,90],[180,90],[180,-90],[-180,-90]], // world exterior (CCW)
+      CAL // California hole (CW)
+    ]
+  }
+}, {
+  style: { fillColor: '#f0ebe0', fillOpacity: 0.68, color: '#b8860b', weight: 1.5, fillRule: 'evenodd' }
+}).addTo(map);
+
+// Helpers
+function fmtDate(d) {
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function fetchStorage(station, capacity, cb) {
+  var end = new Date(), start = new Date(+end - 10*86400000);
+  var url = 'https://cdec.water.ca.gov/dynamicapp/req/JSONDataServicesDesk?Stations='+station+'&SensorNums=15&dur_code=D&Start_time='+fmtDate(start)+'&End_time='+fmtDate(end);
+  fetch('https://corsproxy.io/?'+encodeURIComponent(url))
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (!Array.isArray(data)) { cb(null); return; }
+      var latest = null;
+      for (var i = data.length-1; i >= 0; i--) {
+        var v = parseFloat(data[i].value);
+        if (!isNaN(v) && v > 0) { latest = v; break; }
+      }
+      if (latest === null) { cb(null); return; }
+      cb({ af: latest, pct: Math.min(100, latest/capacity*100).toFixed(1) });
+    })
+    .catch(function(){ cb(null); });
+}
+
+function popupHTML(river, data) {
+  var h = '<div class="river-popup"><h4>'+river.name+'</h4>';
+  if (river.station && data === undefined) {
+    h += '<div class="cap-label">'+river.reservoir+': <em>fetching...</em></div>';
+  } else if (river.station && data) {
+    var pct = parseFloat(data.pct);
+    var col = pct > 60 ? '#27ae60' : pct > 30 ? '#f39c12' : '#c0392b';
+    h += '<div class="cap-label">'+river.reservoir+'</div>';
+    h += '<div class="cap-bar"><div class="cap-fill" style="width:'+pct+'%;background:'+col+'"></div></div>';
+    h += '<div class="cap-label"><strong>'+data.pct+'%</strong> capacity &nbsp;·&nbsp; '+Math.round(data.af/1000)+'K AF</div>';
+  } else if (river.station && data === null) {
+    h += '<div class="cap-label">'+river.reservoir+': data unavailable</div>';
+  } else {
+    h += '<div class="cap-label">No major reservoir</div>';
+  }
+  return h + '</div>';
+}
+
+// River layers
+var activeBtn = null;
+var rLayers = {};
+
+rivers.forEach(function(river) {
+  var line = L.polyline(river.coords, { color: river.color, weight: 3, opacity: 0.85 }).addTo(map);
+  line.bindPopup('');
+
+  function openWithData(latlng) {
+    line.setPopupContent(popupHTML(river, undefined));
+    line.openPopup(latlng || line.getBounds().getCenter());
+    if (river.station) {
+      fetchStorage(river.station, river.capacity, function(data) {
+        line.setPopupContent(popupHTML(river, data));
+      });
+    } else {
+      line.setPopupContent(popupHTML(river, null));
     }
-  ];
+  }
 
-  var map = L.map('ca-rivers-map').setView([37.5, -119.5], 6);
-
-  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    maxZoom: 17,
-    attribution: '© <a href="https://opentopomap.org">OpenTopoMap</a> contributors'
-  }).addTo(map);
-
-  var activeBtn = null;
-  var layers = {};
-
-  rivers.forEach(function(river) {
-    var line = L.polyline(river.coords, {
-      color: river.color,
-      weight: 3,
-      opacity: 0.8
-    }).addTo(map).bindPopup('<strong>' + river.name + '</strong>');
-    layers[river.name] = { line: line, river: river };
+  line.on('click', function(e) {
+    resetLines();
+    line.setStyle({ weight: 6, opacity: 1 });
+    syncBtn(river.name);
+    openWithData(e.latlng);
   });
 
-  var listEl = document.getElementById('river-list');
-  rivers.forEach(function(river) {
-    var btn = document.createElement('button');
-    btn.className = 'river-btn';
-    btn.textContent = river.name;
-    btn.style.borderColor = river.color;
-    btn.style.color = river.color;
-    btn.addEventListener('click', function() {
-      if (activeBtn) {
-        activeBtn.el.classList.remove('active');
-        layers[activeBtn.name].line.setStyle({ weight: 3, opacity: 0.8 });
-      }
-      if (activeBtn && activeBtn.name === river.name) {
-        activeBtn = null;
-        return;
-      }
-      btn.classList.add('active');
-      btn.style.background = river.color;
-      btn.style.color = '#f5f0e8';
-      activeBtn = { el: btn, name: river.name };
-      var l = layers[river.name].line;
-      l.setStyle({ weight: 6, opacity: 1 });
-      map.fitBounds(l.getBounds(), { padding: [40, 40] });
-      l.openPopup();
-    });
-    listEl.appendChild(btn);
+  rLayers[river.name] = { line: line, openWithData: openWithData };
+});
+
+function resetLines() {
+  rivers.forEach(function(r) {
+    if (rLayers[r.name]) rLayers[r.name].line.setStyle({ weight: 3, opacity: 0.85 });
   });
+}
+
+function syncBtn(name) {
+  if (activeBtn) activeBtn.classList.remove('active');
+  var btn = document.querySelector('[data-river="'+name+'"]');
+  if (btn) { btn.classList.add('active'); activeBtn = btn; }
+}
+
+// Buttons
+var listEl = document.getElementById('river-list');
+rivers.forEach(function(river) {
+  var btn = document.createElement('button');
+  btn.className = 'river-btn';
+  btn.textContent = river.name;
+  btn.dataset.river = river.name;
+  btn.style.borderColor = river.color;
+  btn.style.color = river.color;
+
+  btn.addEventListener('click', function() {
+    resetLines();
+    if (activeBtn === btn) {
+      activeBtn.classList.remove('active');
+      activeBtn = null;
+      return;
+    }
+    syncBtn(river.name);
+    var l = rLayers[river.name];
+    l.line.setStyle({ weight: 6, opacity: 1 });
+    map.fitBounds(l.line.getBounds(), { padding: [60, 60] });
+    l.openWithData();
+  });
+
+  listEl.appendChild(btn);
+});
+
 })();
 </script>
