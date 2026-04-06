@@ -50,7 +50,6 @@ exclude:
   - utilities/
   - navigation/
   - layout/
-  - assets/js/
   - CHANGELOG.md
   - MIGRATION.md
   - CODE_OF_CONDUCT.md
