@@ -5,9 +5,9 @@ nav_order: 1
 permalink: /
 ---
 
-<img src="/assets/horses.jpg" style="width:100%; max-height:400px; object-fit:cover; display:block; margin-bottom:24px;">
-
 # Balanced
+
+<img src="/assets/horses.jpg" style="width:100%; max-height:400px; object-fit:cover; display:block; margin-bottom:24px;">
 
 “The soul becomes dyed with the colour of its thoughts.”
 <br>
