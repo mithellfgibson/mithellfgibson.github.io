@@ -1,0 +1,170 @@
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+  #ca-rivers-map {
+    width: 100%;
+    height: 520px;
+    border: 2px solid #b8860b;
+    border-radius: 4px;
+    margin-top: 32px;
+    margin-bottom: 16px;
+  }
+  #river-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 32px;
+    margin-top: 12px;
+  }
+  .river-btn {
+    background: none;
+    border: 1px solid #b8860b;
+    color: #b8860b !important;
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    transition: background 0.2s, color 0.2s;
+  }
+  .river-btn:hover, .river-btn.active {
+    background: #b8860b;
+    color: #f5f0e8 !important;
+  }
+  #river-map-label {
+    font-size: 0.78rem;
+    color: #1a3a1a;
+    opacity: 0.6;
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+</style>
+
+<div id="ca-rivers-map"></div>
+<p id="river-map-label">Click a river to explore</p>
+<div id="river-list"></div>
+
+<script>
+(function() {
+  var rivers = [
+    {
+      name: "Sacramento River",
+      color: "#2a6496",
+      coords: [[41.74,-122.37],[41.20,-122.10],[40.50,-122.30],[39.90,-122.05],[39.30,-121.90],[38.80,-121.75],[38.35,-121.60],[38.05,-121.88]]
+    },
+    {
+      name: "San Joaquin River",
+      color: "#1a7a4a",
+      coords: [[37.00,-119.00],[37.20,-119.50],[37.45,-120.20],[37.75,-121.00],[38.05,-121.50],[38.05,-121.88]]
+    },
+    {
+      name: "Klamath River",
+      color: "#6b3fa0",
+      coords: [[42.18,-121.78],[41.90,-122.60],[41.50,-122.95],[41.30,-123.45],[41.55,-123.85],[41.53,-124.06]]
+    },
+    {
+      name: "Trinity River",
+      color: "#c0392b",
+      coords: [[40.95,-122.75],[40.80,-123.10],[40.60,-123.40],[41.05,-123.60],[41.30,-123.45]]
+    },
+    {
+      name: "Feather River",
+      color: "#e67e22",
+      coords: [[40.10,-120.50],[39.80,-121.20],[39.40,-121.55],[39.00,-121.60],[38.70,-121.60]]
+    },
+    {
+      name: "American River",
+      color: "#16a085",
+      coords: [[38.90,-120.10],[38.75,-120.70],[38.65,-121.10],[38.58,-121.50]]
+    },
+    {
+      name: "Merced River",
+      color: "#8e44ad",
+      coords: [[37.73,-119.57],[37.55,-119.90],[37.40,-120.35],[37.38,-120.98]]
+    },
+    {
+      name: "Kings River",
+      color: "#d35400",
+      coords: [[36.88,-118.58],[36.75,-119.10],[36.55,-119.50],[36.40,-119.82]]
+    },
+    {
+      name: "Kern River",
+      color: "#27ae60",
+      coords: [[36.48,-118.32],[36.15,-118.65],[35.80,-118.85],[35.40,-119.02]]
+    },
+    {
+      name: "Eel River",
+      color: "#2980b9",
+      coords: [[39.80,-123.02],[40.10,-123.35],[40.35,-123.65],[40.55,-124.30]]
+    },
+    {
+      name: "Russian River",
+      color: "#c0392b",
+      coords: [[39.38,-123.03],[39.00,-123.00],[38.65,-122.90],[38.45,-123.13]]
+    },
+    {
+      name: "Salinas River",
+      color: "#7f8c8d",
+      coords: [[35.48,-120.68],[35.80,-120.95],[36.20,-121.10],[36.45,-121.60],[36.72,-121.78]]
+    },
+    {
+      name: "Colorado River",
+      color: "#e74c3c",
+      coords: [[36.90,-114.10],[36.00,-114.50],[35.20,-114.62],[34.50,-114.38],[33.70,-114.52],[32.72,-114.72]]
+    },
+    {
+      name: "Santa Ana River",
+      color: "#f39c12",
+      coords: [[34.12,-116.88],[34.05,-117.30],[33.90,-117.60],[33.72,-117.93]]
+    }
+  ];
+
+  var map = L.map('ca-rivers-map').setView([37.5, -119.5], 6);
+
+  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    maxZoom: 17,
+    attribution: '© <a href="https://opentopomap.org">OpenTopoMap</a> contributors'
+  }).addTo(map);
+
+  var activeBtn = null;
+  var layers = {};
+
+  rivers.forEach(function(river) {
+    var line = L.polyline(river.coords, {
+      color: river.color,
+      weight: 3,
+      opacity: 0.8
+    }).addTo(map).bindPopup('<strong>' + river.name + '</strong>');
+    layers[river.name] = { line: line, river: river };
+  });
+
+  var listEl = document.getElementById('river-list');
+  rivers.forEach(function(river) {
+    var btn = document.createElement('button');
+    btn.className = 'river-btn';
+    btn.textContent = river.name;
+    btn.style.borderColor = river.color;
+    btn.style.color = river.color;
+    btn.addEventListener('click', function() {
+      if (activeBtn) {
+        activeBtn.el.classList.remove('active');
+        layers[activeBtn.name].line.setStyle({ weight: 3, opacity: 0.8 });
+      }
+      if (activeBtn && activeBtn.name === river.name) {
+        activeBtn = null;
+        return;
+      }
+      btn.classList.add('active');
+      btn.style.background = river.color;
+      btn.style.color = '#f5f0e8';
+      activeBtn = { el: btn, name: river.name };
+      var l = layers[river.name].line;
+      l.setStyle({ weight: 6, opacity: 1 });
+      map.fitBounds(l.getBounds(), { padding: [40, 40] });
+      l.openPopup();
+    });
+    listEl.appendChild(btn);
+  });
+})();
+</script>
