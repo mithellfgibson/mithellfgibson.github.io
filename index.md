@@ -10,5 +10,9 @@ permalink: /
 # Balanced
 
 “The soul becomes dyed with the colour of its thoughts.”
+
+<br>
+
 “It is not death that a man should fear, but he should fear never beginning to live.”
+
 ― Marcus Aurelius
