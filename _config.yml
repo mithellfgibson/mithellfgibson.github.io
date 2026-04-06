@@ -5,12 +5,8 @@ description: A personal dashboard to orient my life
 baseurl: ""
 url: "https://mithellfgibson.github.io"
 
-# Use Just the Docs as a remote theme
-remote_theme: just-the-docs/just-the-docs
-
-# Plugins: include remote-theme support for GitHub Pages
+# Plugins
 plugins:
-  - jekyll-remote-theme
   - jekyll-seo-tag
   - jekyll-github-metadata
   - jekyll-include-cache
