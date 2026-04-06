@@ -9,4 +9,6 @@ permalink: /
 
 # Balanced
 
-There is no end, there is no beginning: Perpetual Orientation
+“The soul becomes dyed with the colour of its thoughts.”
+“It is not death that a man should fear, but he should fear never beginning to live.”
+― Marcus Aurelius
