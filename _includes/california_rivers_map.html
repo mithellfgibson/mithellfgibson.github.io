@@ -194,19 +194,21 @@ function fetchStorage(station, capacity, cb) {
 }
 
 function popupHTML(river, data) {
-  var h = '<div class="river-popup"><h4>'+river.name+'</h4>';
+  var h = '<div style="min-width:160px;font-family:inherit;color:#1a3a1a;">'
+        + '<strong style="display:block;margin-bottom:6px;font-size:0.95rem;">'+river.name+'</strong>';
   if (river.station && data === undefined) {
-    h += '<div class="cap-label">'+river.reservoir+': <em>fetching...</em></div>';
+    h += '<div style="font-size:0.82rem;color:#555;">'+river.reservoir+': <em>fetching…</em></div>';
   } else if (river.station && data) {
     var pct = parseFloat(data.pct);
     var col = pct > 60 ? '#27ae60' : pct > 30 ? '#f39c12' : '#c0392b';
-    h += '<div class="cap-label">'+river.reservoir+'</div>';
-    h += '<div class="cap-bar"><div class="cap-fill" style="width:'+pct+'%;background:'+col+'"></div></div>';
-    h += '<div class="cap-label"><strong>'+data.pct+'%</strong> capacity &nbsp;·&nbsp; '+Math.round(data.af/1000)+'K AF</div>';
+    h += '<div style="font-size:0.82rem;color:#555;margin-bottom:4px;">'+river.reservoir+'</div>';
+    h += '<div style="background:#ddd;border-radius:4px;height:8px;width:100%;margin:4px 0;">'
+       + '<div style="width:'+pct+'%;background:'+col+';height:8px;border-radius:4px;"></div></div>';
+    h += '<div style="font-size:0.82rem;color:#555;"><strong>'+data.pct+'%</strong> capacity &nbsp;·&nbsp; '+Math.round(data.af/1000)+'K AF</div>';
   } else if (river.station && data === null) {
-    h += '<div class="cap-label">'+river.reservoir+': data unavailable</div>';
+    h += '<div style="font-size:0.82rem;color:#555;">'+river.reservoir+': data unavailable</div>';
   } else {
-    h += '<div class="cap-label">No major reservoir</div>';
+    h += '<div style="font-size:0.82rem;color:#555;">No major reservoir</div>';
   }
   return h + '</div>';
 }
