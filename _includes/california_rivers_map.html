@@ -1,12 +1,9 @@
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-
-<div id="ca-rivers-map"></div>
+<div id="ca-rivers-map" style="width:100%;height:540px;border:2px solid #b8860b;border-radius:4px;margin-top:32px;margin-bottom:16px;"></div>
 <p id="river-map-label">Click a river to explore — shows current reservoir capacity</p>
 <div id="river-list"></div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 (function() {
 
 // California boundary in GeoJSON [lng, lat] order, clockwise (interior/hole ring)
@@ -283,4 +280,5 @@ rivers.forEach(function(river) {
 });
 
 })();
+});
 </script>
