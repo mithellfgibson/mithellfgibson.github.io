@@ -1,44 +1,6 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<style>
-  #ca-rivers-map {
-    width: 100%;
-    height: 540px;
-    border: 2px solid #b8860b;
-    border-radius: 4px;
-    margin-top: 32px;
-    margin-bottom: 16px;
-  }
-  #river-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 32px;
-    margin-top: 12px;
-  }
-  .river-btn {
-    background: none;
-    border: 1px solid;
-    padding: 5px 14px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.85rem;
-    transition: background 0.2s, color 0.2s;
-  }
-  #river-map-label {
-    font-size: 0.78rem;
-    color: #1a3a1a;
-    opacity: 0.6;
-    margin-top: 4px;
-    margin-bottom: 8px;
-  }
-  .river-popup h4 { margin: 0 0 6px; font-size: 0.95rem; }
-  .river-popup .cap-bar { background: #ddd; border-radius: 4px; height: 8px; width: 100%; margin: 6px 0; }
-  .river-popup .cap-fill { height: 8px; border-radius: 4px; }
-  .river-popup .cap-label { font-size: 0.82rem; color: #555; }
-</style>
 
 <div id="ca-rivers-map"></div>
 <p id="river-map-label">Click a river to explore — shows current reservoir capacity</p>
