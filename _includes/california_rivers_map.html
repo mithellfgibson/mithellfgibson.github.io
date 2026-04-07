@@ -9,6 +9,8 @@
       '<p style="padding:20px;color:#c0392b;">Map failed to load (Leaflet not available)</p>';
     return;
   }
+  setTimeout(initMap, 50);
+  function initMap() {
 
 // California boundary in GeoJSON [lng, lat] order, clockwise (interior/hole ring)
 var CAL = [
@@ -150,12 +152,14 @@ var rivers = [
 ];
 
 // Map
-var map = L.map('ca-rivers-map').setView([37.5,-119.5], 6);
+var map = L.map('ca-rivers-map', { preferCanvas: true }).setView([37.5,-119.5], 6);
 
 L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
   maxZoom: 17,
   attribution: '© <a href="https://opentopomap.org">OpenTopoMap</a>'
 }).addTo(map);
+
+map.invalidateSize();
 
 // Inverted California mask — dims surrounding states
 L.geoJSON({
@@ -283,5 +287,6 @@ rivers.forEach(function(river) {
   listEl.appendChild(btn);
 });
 
+  } // end initMap
 })();
 </script>
