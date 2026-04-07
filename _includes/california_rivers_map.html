@@ -3,8 +3,12 @@
 <div id="river-list"></div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
 (function() {
+  if (typeof L === 'undefined') {
+    document.getElementById('ca-rivers-map').innerHTML =
+      '<p style="padding:20px;color:#c0392b;">Map failed to load (Leaflet not available)</p>';
+    return;
+  }
 
 // California boundary in GeoJSON [lng, lat] order, clockwise (interior/hole ring)
 var CAL = [
@@ -280,5 +284,4 @@ rivers.forEach(function(river) {
 });
 
 })();
-});
 </script>
